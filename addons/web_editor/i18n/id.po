@@ -1184,21 +1184,21 @@ msgstr ""
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Heading 1"
-msgstr ""
+msgstr "Heading 1"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Heading 2"
-msgstr ""
+msgstr "Heading 2"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Heading 3"
-msgstr ""
+msgstr "Heading 3"
 
 #. module: web_editor
 #. openerp-web
@@ -2308,7 +2308,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/js/common/ace.js:0
 #, python-format
 msgid "Server error"
-msgstr ""
+msgstr "Error server"
 
 #. module: web_editor
 #. openerp-web
@@ -2797,7 +2797,7 @@ msgstr "Jenis"
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Type \"/\" for commands"
-msgstr ""
+msgstr "Ketik \"/\" untuk command"
 
 #. module: web_editor
 #. openerp-web

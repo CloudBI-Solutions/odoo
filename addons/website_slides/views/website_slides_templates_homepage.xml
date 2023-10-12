@@ -2,18 +2,18 @@
 <odoo><data>
 
 <!-- Channels home template -->
-<template id='courses_home' name="Odoo Courses Homepage">
+<template id='courses_home' name="Forth Courses Homepage">
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
         <div id="wrap" class="wrap o_wslides_wrap">
             <section class="s_banner overflow-hidden bg-900" style="background-image: url(&quot;/website_slides/static/src/img/banner_default.svg&quot;); background-size: cover; background-position: 55% 65%" data-snippet="s_banner">
                 <div class="container align-items-center d-flex mb-5 mt-lg-5 pt-lg-4 pb-lg-1">
                     <div>
-                        <h1 class="display-3 mb-0">Reach new heights</h1>
-                        <h2 class="mb-4">Start your online course today!</h2>
+                        <h1 class="display-3 mb-0">Be Part Of Innovative Change</h1>
+                        <h2 class="mb-4">Start your online training today!</h2>
                         <div class="row mt-1 mb-3">
                             <div class="col">
-                                <p>Skill up and have an impact! Your business career starts here.<br/>Time to start a course.</p>
+                                <p>Skill up and have an impact! Your future of innovation starts here.<br/>Bocome a member NOW.</p>
                             </div>
                         </div>
                     </div>
@@ -46,7 +46,7 @@
                         <t t-set="redirect_url" t-value="'/slides'"/>
                         <t t-set="send_alert_classes" t-value="'alert alert-danger alert-dismissable mt-4 mb-0'"/>
                         <t t-set="done_alert_classes" t-value="'alert alert-success alert-dismissable mt-4 mb-0'"/>
-                        <t t-set="send_validation_email_message">Click here to send a verification email allowing you to participate at the eLearning.</t>
+                        <t t-set="send_validation_email_message">Click here to send a verification email allowing you to participate in eLearning.</t>
                         <t t-set="additional_validated_email_message"> You may now participate in our eLearning.</t>
                     </t>
                 </div>
@@ -321,7 +321,7 @@
         <t t-set="course_image" t-value="website.image_url(channel, 'image_1024')"/>
         <t t-set="channel_frontend_tags" t-value="channel.tag_ids.filtered(lambda tag: tag.color)"/>
         <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name">
-            <t t-if="channel.partner_has_new_content" t-call="website_slides.course_card_information"/> 
+            <t t-if="channel.partner_has_new_content" t-call="website_slides.course_card_information"/>
             <div t-if="channel.image_1024" class="card-img-top" t-attf-style="padding-top: 50%; background-image: url(#{course_image}); background-size: cover; background-position:center"/>
             <div t-else="" class="o_wslides_gradient card-img-top position-relative" style="padding-top: 50%; opacity: 0.8">
                 <i class="fa fa-graduation-cap fa-2x mr-3 mb-3 position-absolute text-white-75" style="right:0; bottom: 0"/>
