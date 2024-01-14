@@ -15,7 +15,7 @@ class Users(models.Model):
             ('onboarding_ping', 'Onboarding ping'),
             ('idle', 'Idle'),
             ('disabled', 'Disabled'),
-        ], string="OdooBot Status", readonly=True, required=False)  # keep track of the state: correspond to the code of the last message sent
+        ], string="FusionBot Status", readonly=True, required=False)  # keep track of the state: correspond to the code of the last message sent
     odoobot_failed = fields.Boolean(readonly=True)
 
     @property
@@ -32,7 +32,7 @@ class Users(models.Model):
         odoobot_id = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
         channel_info = self.env['mail.channel'].channel_get([odoobot_id, self.partner_id.id])
         channel = self.env['mail.channel'].browse(channel_info['id'])
-        message = _("Hello,<br/>Odoo's chat helps employees collaborate efficiently. I'm here to help you discover its features.<br/><b>Try to send me an emoji</b> <span class=\"o_odoobot_command\">:)</span>")
+        message = _("Hello,<br/>Fusion's chat helps employees collaborate efficiently. I'm here to help you discover its features.<br/><b>Try to send me an emoji</b> <span class=\"o_odoobot_command\">:)</span>")
         channel.sudo().message_post(body=message, author_id=odoobot_id, message_type="comment", subtype_xmlid="mail.mt_comment")
         self.sudo().odoobot_state = 'onboarding_emoji'
         return channel

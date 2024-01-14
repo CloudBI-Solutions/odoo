@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'OdooBot',
+    'name': 'FusionBot',
     'version': '1.2',
     'category': 'Productivity/Discuss',
-    'summary': 'Add OdooBot in discussions',
-    'website': 'https://www.odoo.com/app/discuss',
+    'summary': 'Add FusionBot in discussions',
+    'website': 'https://www.eqilibriumsolutions.com/apps',
     'depends': ['mail'],
     'auto_install': True,
     'installable': True,
