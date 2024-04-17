@@ -17,7 +17,7 @@ from odoo.tools.misc import hmac, DotDict, frozendict
 def MockRequest(
         env, *, path='/mockrequest', routing=True, multilang=True,
         context=frozendict(), cookies=frozendict(), country_code=None,
-        website=None, remote_addr=HOST, environ_base=None,
+        website=None, remote_addr=HOST, environ_base=None, url_root=None,
         # website_sale
         sale_order_id=None, website_sale_current_pl=None,
 ):
@@ -41,6 +41,8 @@ def MockRequest(
             cookies=cookies,
             referrer='',
             remote_addr=remote_addr,
+            url_root=url_root,
+            args=[],
         ),
         type='http',
         future_response=odoo.http.FutureResponse(),
@@ -51,6 +53,7 @@ def MockRequest(
             geoip={'country_code': country_code},
             sale_order_id=sale_order_id,
             website_sale_current_pl=website_sale_current_pl,
+            context={'lang': ''},
         ),
         geoip={},
         db=env.registry.db_name,
@@ -203,10 +206,17 @@ def add_form_signature(html_fragment, env_sudo):
         # the value of email_to can still be None in case of default value
         if 'email_to' not in form_values:
             continue
-        elif not form_values['email_to'].attrib.get('value'):
-            form_values['email_to'].attrib['value'] = env_sudo.company.email or ''
+
+        email_to_value = form_values['email_to'].attrib.get('value')
+        if (not email_to_value
+            or (email_to_value == 'info@yourcompany.example.com'
+                and html_fragment.xpath('//span[@data-for="contactus_form"]'))):
+            # This means that the mail will be sent to the value of the dataFor
+            # which is the company email.
+            email_to_value = env_sudo.company.email or ''
+
         has_cc = {'email_cc', 'email_bcc'} & form_values.keys()
-        value = form_values['email_to'].attrib['value'] + (':email_cc' if has_cc else '')
+        value = email_to_value + (':email_cc' if has_cc else '')
         hash_value = hmac(env_sudo, 'website_form_signature', value)
         if has_cc:
             hash_value += ':email_cc'

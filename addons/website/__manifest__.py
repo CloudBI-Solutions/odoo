@@ -137,6 +137,9 @@
             'website/static/src/xml/website.xml',
             'website/static/src/xml/website.background.video.xml',
             'website/static/src/xml/website.share.xml',
+            # Stable fix, will be replaced by an `ir.asset` in master to be able
+            # to clean `<script>` tags in embed code snippets in edit mode.
+            'website/static/src/snippets/s_embed_code/000.js',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/js/content/inject_dom.js',
@@ -162,6 +165,7 @@
             ('prepend', 'website/static/src/scss/secondary_variables.scss'),
         ],
         'web.assets_tests': [
+            'website/static/tests/tour_utils/widget_lifecycle_dep_widget.js',
             'website/static/tests/tours/**/*',
             'website/static/src/client_actions/website_preview/website_preview_test_mode.js',
         ],
@@ -179,6 +183,7 @@
             'website/static/src/components/fields/*',
             'website/static/src/components/fullscreen_indication/fullscreen_indication.js',
             'website/static/src/components/fullscreen_indication/fullscreen_indication.scss',
+            'website/static/src/components/fullscreen_indication/fullscreen_indication.xml',
             'website/static/src/components/website_loader/website_loader.js',
             'website/static/src/components/website_loader/website_loader.scss',
             'website/static/src/components/views/*',

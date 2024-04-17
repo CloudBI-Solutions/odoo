@@ -7,6 +7,7 @@ const options = require('web_editor.snippets.options');
 const Dialog = require('web.Dialog');
 const dom = require('web.dom');
 const {generateHTMLId} = require('web_editor.utils');
+const wUtils = require('website.utils');
 require('website.editor.snippets.options');
 
 const qweb = core.qweb;
@@ -364,6 +365,14 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         if (!this.$target[0].dataset.model_name) {
             proms.push(this._applyFormModel());
         }
+        // Get the email_to value from the data-for attribute if it exists. We
+        // use it if there is no value on the email_to input.
+        const formId = this.$target[0].id;
+        const dataForValues = wUtils.getParsedDataFor(formId, this.$target[0].ownerDocument);
+        if (dataForValues) {
+            this.dataForEmailTo = dataForValues['email_to'];
+        }
+        this.defaultEmailToValue = "info@yourcompany.example.com";
         return Promise.all(proms);
     },
     /**
@@ -572,6 +581,16 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                 return this.activeForm.id;
             case 'addActionField': {
                 const value = this.$target.find(`.s_website_form_dnone input[name="${params.fieldName}"]`).val();
+                if (params.fieldName === 'email_to') {
+                    // For email_to, we try to find a value in this order:
+                    // 1. The current value of the input
+                    // 2. The data-for value if it exists
+                    // 3. The default value (`defaultEmailToValue`)
+                    if (value && value !== this.defaultEmailToValue) {
+                        return value;
+                    }
+                    return this.dataForEmailTo || this.defaultEmailToValue;
+                }
                 if (value) {
                     return value;
                 } else {
@@ -642,7 +661,12 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
      */
     _addHiddenField: function (value, fieldName) {
         this.$target.find(`.s_website_form_dnone:has(input[name="${fieldName}"])`).remove();
-        if (value) {
+        // For the email_to field, we keep the field even if it has no value so
+        // that the email is sent to data-for value or to the default email.
+        if (fieldName === 'email_to' && !value && !this.dataForEmailTo) {
+            value = this.defaultEmailToValue;
+        }
+        if (value || fieldName === 'email_to') {
             const hiddenField = qweb.render('website.form_field_hidden', {
                 field: {
                     name: fieldName,
@@ -1303,7 +1327,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 if (dependencyEl.nodeName === 'SELECT') {
                     for (const option of dependencyEl.querySelectorAll('option')) {
                         const button = document.createElement('we-button');
-                        button.textContent = option.value || `<${_t("no value")}>`;
+                        button.textContent = option.textContent || `<${_t("no value")}>`;
                         button.dataset.selectDataAttribute = option.value;
                         selectOptEl.append(button);
                     }
@@ -1405,7 +1429,9 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const inputEl = this.$target[0].querySelector('input');
         const dataFillWith = inputEl ? inputEl.dataset.fillWith : undefined;
         const hasConditionalVisibility = this.$target[0].classList.contains('s_website_form_field_hidden_if');
-        const previousName = this.$target[0].querySelector('.s_website_form_input').name;
+        const previousInputEl = this.$target[0].querySelector('.s_website_form_input');
+        const previousName = previousInputEl.name;
+        const previousType = previousInputEl.type;
         [...this.$target[0].childNodes].forEach(node => node.remove());
         [...fieldEl.childNodes].forEach(node => this.$target[0].appendChild(node));
         [...fieldEl.attributes].forEach(el => this.$target[0].removeAttribute(el.nodeName));
@@ -1414,8 +1440,10 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             this.$target[0].classList.add('s_website_form_field_hidden_if', 'd-none');
         }
         const dependentFieldEls = this.formEl.querySelectorAll(`.s_website_form_field[data-visibility-dependency="${previousName}"]`);
-        const newName = this.$target[0].querySelector('.s_website_form_input').name;
-        if (previousName !== newName && dependentFieldEls) {
+        const newFormInputEl = this.$target[0].querySelector('.s_website_form_input');
+        const newName = newFormInputEl.name;
+        const newType = newFormInputEl.type;
+        if ((previousName !== newName || previousType !== newType) && dependentFieldEls) {
             // In order to keep the visibility conditions consistent,
             // when the name has changed, it means that the type has changed so
             // all fields whose visibility depends on this field must be updated so that
@@ -1437,10 +1465,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      _setVisibilityDependency(value) {
         delete this.$target[0].dataset.visibilityCondition;
         delete this.$target[0].dataset.visibilityComparator;
-        const previousDependency = this._getDependencyEl();
-        if (this.formEl.querySelector(`.s_website_form_input[name="${value}"]`).type !== (previousDependency && previousDependency.type)) {
-            this.rerender = true;
-        }
+        this.rerender = true;
         this.$target[0].dataset.visibilityDependency = value;
     },
     /**

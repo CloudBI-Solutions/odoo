@@ -225,6 +225,23 @@ odoo.define('website.tour.form_editor', function (require) {
             run: () => null,
         },
         ...addExistingField('email_cc', 'text', 'Test conditional visibility', false, {visibility: CONDITIONALVISIBILITY, condition: 'odoo'}),
+        // Check that visibility condition is deleted on dependency type change.
+        ...addCustomField("char", "text", "dependent", false, {visibility: CONDITIONALVISIBILITY}),
+        ...addCustomField("selection", "radio", "dependency", false),
+        ...selectFieldByLabel("dependent"),
+        ...selectButtonByData('data-set-visibility-dependency="dependency"'),
+        ...selectFieldByLabel("dependency"),
+        ...selectButtonByData('data-custom-field="char"'),
+        ...selectFieldByLabel("dependent"),
+        {
+            content: "Open the select",
+            trigger: 'we-select:has(we-button[data-set-visibility="visible"]) we-toggler',
+        },
+        {
+            content: "Check that the field no longer has conditional visibility",
+            trigger: "we-select we-button[data-set-visibility='visible'].active",
+            run: () => null,
+        },
 
         ...addExistingField('date', 'text', 'Test Date', true),
 
@@ -461,6 +478,16 @@ odoo.define('website.tour.form_editor', function (require) {
         ...addCustomField("char", "text", "field C", false),
         ...selectFieldByLabel("field B"),
         ...selectButtonByText(CONDITIONALVISIBILITY),
+        ...selectButtonByText(CONDITIONALVISIBILITY),
+        {
+            content: "Check that there is a comparator after two clicks on 'Visible only if'",
+            trigger: "[data-attribute-name='visibilityComparator']",
+            run: function () {
+                if (!this.$anchor[0].querySelector("we-button.active")) {
+                    console.error("A default comparator should be set");
+                }
+            },
+        },
         ...selectButtonByData('data-set-visibility-dependency="field C"'),
         ...selectButtonByData('data-select-data-attribute="set"'),
         {
@@ -598,6 +625,10 @@ odoo.define('website.tour.form_editor', function (require) {
             content: "Change a random option",
             trigger: '[data-set-mark] input',
             run: 'text_blur **',
+        }, {
+            content: "Check that the recipient email is correct",
+            trigger: 'we-input[data-field-name="email_to"] input:propValue("website_form_contactus_edition_no_email@mail.com")',
+            run: () => null, // it's a check.
         },
     ]));
 
@@ -716,6 +747,18 @@ odoo.define('website.tour.form_editor', function (require) {
             run: () => null,
         }
     ]);
+
+    wTourUtils.registerWebsitePreviewTour('website_form_contactus_change_random_option', {
+        test: true,
+        url: '/contactus',
+        edition: true,
+    }, editContactUs([
+        {
+            content: "Change a random option",
+            trigger: '[data-set-mark] input',
+            run: 'text_blur **',
+        },
+    ]));
 
     return {};
 });
