@@ -79,9 +79,9 @@
     <template id="brand_promotion_message" name="Brand Promotion Message">
         <t t-set="odoo_logo">
             <a target="_blank"
-                t-attf-href="http://www.eqilibriumsolutions.com"
+                t-attf-href="http://www.odoo.com?utm_source=db&amp;utm_medium=#{_utm_medium}"
                 class="badge text-bg-light">
-                <img alt="CloudBI Fusion"
+                <img alt="Odoo"
                     src="/web/static/img/odoo_logo_tiny.png"
                     width="62" height="20"
                     style="width: auto; height: 1em; vertical-align: baseline;"/>
@@ -117,7 +117,7 @@
                             <t t-if="not disable_database_manager">
                                 <a class="border-end pe-2 me-1" href="/web/database/manager">Manage Databases</a>
                             </t>
-                            <a href="https://www.eqilibriumsolutions.com" target="_blank">Powered by <span>CoreAI</span></a>
+                            <a href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth" target="_blank">Powered by <span>Odoo</span></a>
                         </div>
                     </div>
                 </div>
@@ -302,8 +302,8 @@
                 <link rel="apple-touch-icon" href="/web/static/img/mobile-icons/apple-152x152.png"/>
 
                 <!-- Windows Phone -->
-                <meta name="msapplication-navbutton-color" content="#2941a3"/>
-                <meta name="msapplication-TileColor" content="#2941a3"/>
+                <meta name="msapplication-navbutton-color" content="#875A7B"/>
+                <meta name="msapplication-TileColor" content="#875A7B"/>
                 <meta name="msapplication-TileImage" content="/web/static/img/mobile-icons/windows-144x144.png"/>
 
                 <script type="text/javascript">
